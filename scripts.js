@@ -23,7 +23,16 @@ let lockBoard = false;
 */
 function initGame() {
 
-    resetBoard;
+    resetBoard();
+    //reset entire game board!
+    document.getElementById("game-board").innerHTML = "";
+    for(let i = 0; i < 16; i++)
+    {
+        cards.pop();
+    }
+    
+
+
     //first, assign two cards to each emoji
     for(let i = 0; i < symbols.length; i++)
     {
@@ -35,7 +44,9 @@ function initGame() {
     //then, shuffle game
     shuffleArray(cards);
 
-    //leave this here
+    //make sure the cards are also shuffled in the board
+    cards.forEach(card => document.getElementById("game-board").appendChild(card));
+
     document.getElementById('restart-btn').addEventListener('click', initGame);
 }
 
@@ -47,13 +58,13 @@ function initGame() {
 */
 function createCard(symbol) 
 {
-    newCard = document.createElement('button'); //creates a new button (aka card)
+    const newCard = document.createElement('button'); //creates a new button (aka card)
     document.getElementById("game-board").appendChild(newCard); //adds card to game-board
-    newCard.className += "card"; //adds card class to new card
+    newCard.className = "card"; //adds card class to new card
     newCard.dataset.symbol = symbol; //adds symbol attribute, and sets it to symbol from parameter
 
     newCard.addEventListener('click', () => flipCard(newCard)); //adds event listener w/ 'flipCard' function
-    cards.add(newCard);
+    cards.push(newCard);
 
 }
 
@@ -70,8 +81,17 @@ function flipCard(card) {
     if (lockBoard || card === firstCard) return;
     if(!card) return; //TODO: i think we're supposed to do This here?
     
-    card.className += "flipped";
+    //card.className += " flipped";
+    card.classList.add("flipped");
     card.innerText = card.dataset.symbol;
+
+    if(!firstCard) firstCard = card;
+    else if(!secondCard) 
+    {
+        secondCard = card;
+        checkForMatch();
+    }
+
 }
 
 /* 
@@ -80,7 +100,13 @@ function flipCard(card) {
     Otherwise, you should unflip the card and continue playing normally.
 */
 function checkForMatch() {
-    // Write your code here
+    if(firstCard.dataset.symbol === secondCard.dataset.symbol)
+    {
+        disableCards(); //this'll call it on firstCard and secondCard
+    }
+
+    //un-flip them
+    unflipCards();
 }
 
 /* 
@@ -88,8 +114,11 @@ function checkForMatch() {
     properties to make sure that they can no longer be clicked at all. Then use the resetBoard() function
     to reset the firstCard, secondCard, and lockBoard variables. (That's been written for you already)
 */
-function disableCards() {
-    // Write your code here
+function disableCards() 
+{
+    firstCard.classList.add("matched");
+    secondCard.classList.add("matched");
+    resetBoard();
 }
  
 /* ---------------------  Everything under has already been done for you -------------------------- */
