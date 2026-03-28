@@ -21,7 +21,8 @@ let lockBoard = false;
     Use the createCard() function to initialize each cardElement and add it to the gameBoard.
 
 */
-function initGame() {
+function initGame() 
+{
 
     resetBoard();
     //reset entire game board!
@@ -30,8 +31,6 @@ function initGame() {
     {
         cards.pop();
     }
-    
-
 
     //first, assign two cards to each emoji
     for(let i = 0; i < symbols.length; i++)
@@ -64,7 +63,7 @@ function createCard(symbol)
     newCard.dataset.symbol = symbol; //adds symbol attribute, and sets it to symbol from parameter
 
     newCard.addEventListener('click', () => flipCard(newCard)); //adds event listener w/ 'flipCard' function
-    cards.push(newCard);
+    cards.push(newCard); //adds new card to cards array
 
 }
 
@@ -76,20 +75,22 @@ function createCard(symbol)
     If it's the second, then set the secondCard variable to it. Also, if that's the second card, then you 
     want to check for a match using the checkForMatch() function. 
 */
-function flipCard(card) {
+function flipCard(card) 
+{
     // If the board is supposed to be locked or you picked the same card you already picked
     if (lockBoard || card === firstCard) return;
-    if(!card) return; //TODO: i think we're supposed to do This here?
     
-    //card.className += " flipped";
+    if(!card) return; //null check
+    
+    //adds flipped class
     card.classList.add("flipped");
-    card.innerText = card.dataset.symbol;
+    card.innerText = card.dataset.symbol; //sets the symbol visible on the card when clicked
 
-    if(!firstCard) firstCard = card;
+    if(!firstCard) firstCard = card; //sets firstCard to card if it's the first card
     else if(!secondCard) 
     {
         secondCard = card;
-        checkForMatch();
+        checkForMatch(); //checks for match once we have a pair
     }
 
 }
@@ -99,14 +100,18 @@ function flipCard(card) {
     game and then reset the board so that there is firstCard == null and secondCard == null.
     Otherwise, you should unflip the card and continue playing normally.
 */
-function checkForMatch() {
-    if(firstCard.dataset.symbol === secondCard.dataset.symbol)
+function checkForMatch() 
+{
+    
+    if(firstCard.dataset.symbol == secondCard.dataset.symbol)
     {
-        disableCards(); //this'll call it on firstCard and secondCard
+        unflipCards(); //unflip first to prevent the game from freezing
+        disableCards(); //remove the two cards from the game
     }
-
-    //un-flip them
-    unflipCards();
+    else
+    {
+        unflipCards(); 
+    }   
 }
 
 /* 
@@ -116,9 +121,9 @@ function checkForMatch() {
 */
 function disableCards() 
 {
-    firstCard.classList.add("matched");
+    firstCard.classList.add("matched"); //add matched to both
     secondCard.classList.add("matched");
-    resetBoard();
+    resetBoard(); //calls written function
 }
  
 /* ---------------------  Everything under has already been done for you -------------------------- */
