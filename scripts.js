@@ -23,12 +23,13 @@ let lockBoard = false;
 */
 function initGame() {
 
+    resetBoard;
     //first, assign two cards to each emoji
-    let symi = 0; //symbol index
-    for(let i = 0; i < cards.length; i+=2)
+    for(let i = 0; i < symbols.length; i++)
     {
-        cards[i] = symbols[symi]; //TODO: replace this w/ createCard
-        cards[i+1] = symbols[symi];
+        //do this twice
+        createCard(symbols[i]);
+        createCard(symbols[i]);
     }
 
     //then, shuffle game
@@ -46,7 +47,14 @@ function initGame() {
 */
 function createCard(symbol) 
 {
-    // Write your code here
+    newCard = document.createElement('button'); //creates a new button (aka card)
+    document.getElementById("game-board").appendChild(newCard); //adds card to game-board
+    newCard.className += "card"; //adds card class to new card
+    newCard.dataset.symbol = symbol; //adds symbol attribute, and sets it to symbol from parameter
+
+    newCard.addEventListener('click', () => flipCard(newCard)); //adds event listener w/ 'flipCard' function
+    cards.add(newCard);
+
 }
 
 /*
@@ -60,7 +68,10 @@ function createCard(symbol)
 function flipCard(card) {
     // If the board is supposed to be locked or you picked the same card you already picked
     if (lockBoard || card === firstCard) return;
-    // Write your code here
+    if(!card) return; //TODO: i think we're supposed to do This here?
+    
+    card.className += "flipped";
+    card.innerText = card.dataset.symbol;
 }
 
 /* 
